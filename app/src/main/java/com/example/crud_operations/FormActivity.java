@@ -39,10 +39,9 @@ public class FormActivity extends AppCompatActivity {
         clickableArea.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Volta para ListActivity
                 Intent intent = new Intent(FormActivity.this, ListActivity.class);
                 startActivity(intent);
-                finish(); // Opcional: Fecha a FormActivity atual
+                finish();
             }
         });
 

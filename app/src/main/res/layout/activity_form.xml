@@ -8,75 +8,85 @@
     tools:context=".FormActivity">
 
     <!-- Botão de Voltar -->
-    <Button
-        android:id="@+id/btn_voltar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Voltar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/guideline" />
-
-    <!-- Guideline para ajudar no posicionamento do botão "Voltar" -->
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="50dp" />
-
-    <!-- Layout para os campos de entrada -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/btn_voltar"
-        app:layout_constraintBottom_toTopOf="@id/btn_polimorfismo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editText_nome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Nome"
-            android:inputType="text" />
+        <Button
+            android:id="@+id/btn_voltar"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:backgroundTint="@color/primary"
+            android:layout_marginLeft="10dp"
+            android:text="Voltar" />
 
-        <EditText
-            android:id="@+id/editText_marca"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Marca"
-            android:inputType="text" />
+            android:layout_height="0dp"
+            android:layout_weight="8.5"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-        <EditText
-            android:id="@+id/editText_preco"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Preço"
-            android:inputType="numberDecimal" />
+            <EditText
+                android:id="@+id/editText_nome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Nome"
+                android:inputType="text" />
 
-        <EditText
-            android:id="@+id/editText_localizacao"
+            <EditText
+                android:id="@+id/editText_marca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Marca"
+                android:inputType="text" />
+
+            <EditText
+                android:id="@+id/editText_preco"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Preço"
+                android:inputType="numberDecimal" />
+
+            <EditText
+                android:id="@+id/editText_localizacao"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Localização"
+                android:inputType="text" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/barra_inferior"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Localização"
-            android:inputType="text" />
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/primary"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <Button
+                android:id="@+id/btn_polimorfismo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/primary"
+                android:text="Cadastrar"
+                android:textColor="@android:color/white" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Botão "Cadastrar/Modificar" na parte inferior -->
-    <Button
-        android:id="@+id/btn_polimorfismo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cadastrar"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <!-- Layout para os campos de entrada -->
+
+    <!-- Barra inferior com o botão "Cadastrar" -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

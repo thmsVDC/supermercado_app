@@ -1,8 +1,11 @@
 package com.example.crud_operations.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.annotation.NonNull;
 
-public class Produtos {
+public class Produtos implements Parcelable {
 
     private Long id;
     private String nome;
@@ -10,12 +13,52 @@ public class Produtos {
     private double preco;
     private String localizacao;
 
+    // Construtor padrão
+    public Produtos() {
+    }
+
+    // Construtor para criar a partir de um Parcel
+    protected Produtos(Parcel in) {
+        id = in.readLong();
+        nome = in.readString();
+        marca = in.readString();
+        preco = in.readDouble();
+        localizacao = in.readString();
+    }
+
+    public static final Creator<Produtos> CREATOR = new Creator<Produtos>() {
+        @Override
+        public Produtos createFromParcel(Parcel in) {
+            return new Produtos(in);
+        }
+
+        @Override
+        public Produtos[] newArray(int size) {
+            return new Produtos[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(nome);
+        dest.writeString(marca);
+        dest.writeDouble(preco);
+        dest.writeString(localizacao);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     @NonNull
     @Override
     public String toString() {
         return nome;
     }
 
+    // Getters e setters
     public Long getId() {
         return id;
     }

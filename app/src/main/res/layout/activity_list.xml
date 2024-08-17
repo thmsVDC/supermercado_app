@@ -10,47 +10,76 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:orientation="vertical">
 
-
+        <!-- Header -->
         <LinearLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/secondary"
+            android:layout_weight="0.5"
+            android:layout_margin="10dp"
+            android:background="@color/white"
             android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editText_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Buscar por nome"
+                android:inputType="text"
+                android:padding="10dp"/>
+
         </LinearLayout>
 
+
+        <!-- Lista de produtos -->
         <ListView
             android:id="@+id/listView_produtos"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="8"
+            android:layout_weight="8.5"
             android:background="@color/white">
         </ListView>
 
+        <!-- Footer -->
         <LinearLayout
             android:id="@+id/footer"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:background="@color/primary"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:gravity="center_vertical">
 
 
+            <!-- Icone -->
             <ImageView
                 android:id="@+id/gear_icon"
                 android:layout_width="27dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_margin="5dp"
+                android:layout_marginStart="16dp"
+                android:layout_weight="0.5"
                 app:srcCompat="@drawable/gear_fill" />
 
+            <View
+                android:id="@+id/view"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="9" />
+
+            <!-- Botão para redirecionar para MyListActivity -->
+            <Button
+                android:id="@+id/btn_view_my_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:text="Ver Lista"
+                android:textColor="@color/primary"
+                android:backgroundTint="@color/white"/>
+
+
         </LinearLayout>
-
-
-
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
