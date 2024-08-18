@@ -60,16 +60,28 @@ public class ProdutosBD extends SQLiteOpenHelper {
         return id != -1;
     }
 
-    public void alterarProduto(Produtos produto) {
-        ContentValues values = new ContentValues();
+    public boolean alterarProduto(Produtos produto) {
+        SQLiteDatabase db = null;
+        int rowsAffected = 0;
+        try {
+            db = getWritableDatabase();
+            ContentValues values = new ContentValues();
 
-        values.put("nome", produto.getNome());
-        values.put("marca", produto.getMarca());
-        values.put("preco", produto.getPreco());
-        values.put("localizacao", produto.getLocalizacao());
+            values.put("nome", produto.getNome());
+            values.put("marca", produto.getMarca());
+            values.put("preco", produto.getPreco());
+            values.put("localizacao", produto.getLocalizacao());
 
-        String [] args = {produto.getId().toString()};
-        getWritableDatabase().update("produtos", values, "id=?", args);
+            String[] args = {produto.getId().toString()};
+            rowsAffected = db.update("produtos", values, "id=?", args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
+        return rowsAffected > 0;
     }
 
     public void deletarProduto(Produtos produto) {

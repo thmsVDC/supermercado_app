@@ -35,10 +35,6 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_list);
@@ -61,6 +57,10 @@ public class ListActivity extends AppCompatActivity {
             intent.putParcelableArrayListExtra("produtos_adicionados", produtosAdicionados);
             startActivity(intent);
         });
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+
 
         lista = findViewById(R.id.listView_produtos);
         editTextSearch = findViewById(R.id.editText_search);

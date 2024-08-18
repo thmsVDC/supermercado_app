@@ -8,8 +8,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.crud_operations.BDHelper.ProdutosBD;
 import com.example.crud_operations.model.Produtos;
 
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
     private OnRemoveFromListClickListener onRemoveFromListClickListener;
     private ProdutoFilter filter;
     private boolean isRemoveMode;
+    private boolean isInListActivity;
+    private ProdutosBD produtosBD; // Referência ao banco de dados
 
     public interface OnAddToListClickListener {
         void onAddToListClick(Produtos produto);
@@ -46,6 +50,7 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
         this.filteredList = new ArrayList<>(produtos);
         this.filter = new ProdutoFilter();
         this.isRemoveMode = isRemoveMode;
+        this.produtosBD = new ProdutosBD(context); // Inicialize a referência ao banco de dados
     }
 
     public void setRemoveMode(boolean removeMode) {
@@ -65,7 +70,8 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
         TextView textViewMarca = convertView.findViewById(R.id.textView_marca_valor);
         TextView textViewPreco = convertView.findViewById(R.id.textView_preco_valor);
         TextView textViewLocalizacao = convertView.findViewById(R.id.textView_localizacao_valor);
-        Button buttonAction = convertView.findViewById(R.id.btn_action_or_remove); // Altere o ID para o correto
+        Button buttonAction = convertView.findViewById(R.id.btn_action_or_remove);
+        ImageView imageViewGearFill = convertView.findViewById(R.id.img_gear_fill);
 
         textViewNome.setText(produto.getNome());
         textViewMarca.setText(produto.getMarca());
@@ -80,6 +86,8 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
                     onRemoveFromListClickListener.onRemoveFromListClick(produto);
                 }
             });
+
+            imageViewGearFill.setVisibility(View.GONE); // Esconder ícone de engrenagem
         } else {
             buttonAction.setText("Adicionar à lista");
             buttonAction.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
@@ -88,9 +96,23 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
                     onAddToListClickListener.onAddToListClick(produto);
                 }
             });
+
+            imageViewGearFill.setVisibility(View.VISIBLE);
+            imageViewGearFill.setOnClickListener(v -> {
+                // Remover o produto do banco de dados e atualizar a lista
+                removeProdutoDoBanco(produto);
+                // Atualizar a lista para refletir a remoção
+                originalList.remove(produto);
+                filteredList.remove(produto);
+                notifyDataSetChanged();
+            });
         }
 
         return convertView;
+    }
+
+    private void removeProdutoDoBanco(Produtos produto) {
+        produtosBD.deletarProduto(produto);
     }
 
     @Override

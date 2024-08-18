@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,13 +37,10 @@ public class FormActivity extends AppCompatActivity {
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
         View clickableArea = findViewById(R.id.btn_voltar);
-        clickableArea.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(FormActivity.this, ListActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        clickableArea.setOnClickListener(view -> {
+            Intent intent = new Intent(FormActivity.this, ListActivity.class);
+            startActivity(intent);
+            finish();
         });
 
         produto = new Produtos();
@@ -83,12 +81,34 @@ public class FormActivity extends AppCompatActivity {
             produto.setLocalizacao(editText_localizacao.getText().toString());
 
             if (btn_polimorfismo.getText().toString().equals("Cadastrar")) {
-                bdHelper.salvarProduto(produto);
+                boolean success = bdHelper.salvarProduto(produto);
+                if (success) {
+                    // Exibe a mensagem de sucesso e limpa os campos
+                    Toast.makeText(FormActivity.this, "Produto cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
+                    clearFields();
+                } else {
+                    // Exibe a mensagem de falha, se necessário
+                    Toast.makeText(FormActivity.this, "Falha ao cadastrar o produto.", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 produto.setId(editarProduto.getId()); // Assumindo que o ID deve ser atualizado
-                bdHelper.alterarProduto(produto);
+                boolean success = bdHelper.alterarProduto(produto);
+                if (success) {
+                    // Exibe a mensagem de sucesso
+                    Toast.makeText(FormActivity.this, "Produto modificado com sucesso!", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Exibe a mensagem de falha, se necessário
+                    Toast.makeText(FormActivity.this, "Falha ao modificar o produto.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    private void clearFields() {
+        editText_nome.setText("");
+        editText_marca.setText("");
+        editText_preco.setText("");
+        editText_localizacao.setText("");
     }
 
     @Override
