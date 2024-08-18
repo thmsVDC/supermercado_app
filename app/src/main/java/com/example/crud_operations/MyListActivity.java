@@ -26,6 +26,7 @@ public class MyListActivity extends AppCompatActivity {
     private List<Produtos> listView_produtos;
     private ProdutosAdapter adapter;
     private ListView lista;
+    private TextView textViewTotalPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,9 @@ public class MyListActivity extends AppCompatActivity {
 
         // Configurar a ListView
         lista = findViewById(R.id.listView_my_list);
+
+        // Configurar o TextView para o total de preços
+        textViewTotalPrice = findViewById(R.id.textView_total_price);
 
         // Configurar o botão de voltar
         Button btnVoltar = findViewById(R.id.btn_voltar);
@@ -67,7 +71,8 @@ public class MyListActivity extends AppCompatActivity {
             adapter = new ProdutosAdapter(
                     MyListActivity.this,
                     listView_produtos,
-                    true // Modo de remoção
+                    true, // Modo de remoção
+                    false
             );
 
             // Configurar o listener para o botão de remover
@@ -82,7 +87,23 @@ public class MyListActivity extends AppCompatActivity {
             });
 
             lista.setAdapter(adapter);
+
+            // Atualizar o total de preços
+            atualizarTotalPreco();
         }
+    }
+
+    private void atualizarTotalPreco() {
+        double totalPreco = 0.0;
+
+        if (listView_produtos != null) {
+            for (Produtos produto : listView_produtos) {
+                totalPreco += produto.getPreco();
+            }
+        }
+
+        // Atualiza o TextView com o total
+        textViewTotalPrice.setText(String.format("Total: R$ %.2f", totalPreco));
     }
 
     private void showPhoneNumberDialog() {
@@ -126,12 +147,10 @@ public class MyListActivity extends AppCompatActivity {
         builder.show();
     }
 
-
     private boolean isPhoneNumberValid(String phoneNumber) {
         // Verifica se o número é válido. Ajuste conforme necessário.
         return phoneNumber.matches("\\d{10,11}"); // Apenas os números, sem o prefixo
     }
-
 
     private void showSendingMessageDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -156,8 +175,6 @@ public class MyListActivity extends AppCompatActivity {
         }, 2000); // 2 segundos de delay
     }
 
-
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -166,3 +183,4 @@ public class MyListActivity extends AppCompatActivity {
         }
     }
 }
+

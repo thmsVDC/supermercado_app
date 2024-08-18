@@ -42,7 +42,8 @@
                 android:layout_marginStart="8dp"
                 android:text="Cancelar"
                 android:textColor="@color/white"
-                android:backgroundTint="@color/primary"/>
+                android:backgroundTint="@color/primary"
+                android:textSize="40sp"/>
 
         </LinearLayout>
 
@@ -52,7 +53,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="8.5"
-            android:background="@color/white">
+            android:background="@color/white"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:layout_margin="16dp">
         </ListView>
 
         <!-- Footer -->
@@ -62,12 +66,13 @@
             android:layout_height="wrap_content"
             android:background="@color/primary"
             android:orientation="horizontal"
-            android:padding="10dp"
-            android:gravity="center_vertical">
+            android:padding="16dp"
+            android:gravity="center_vertical"
+            >
 
-            <!-- Icone -->
+            <!-- Icone (Engrenagem ou Adição) -->
             <ImageView
-                android:id="@+id/gear_icon"
+                android:id="@+id/icon_action"
                 android:layout_width="27dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -86,9 +91,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
-                android:text="Ver Lista"
+                android:text="Ver sua Lista"
                 android:textColor="@color/primary"
-                android:backgroundTint="@color/white"/>
+                android:backgroundTint="@color/white"
+                android:padding="16dp"
+                android:textSize="30sp"
+                android:gravity="center"/>
 
         </LinearLayout>
     </LinearLayout>
