@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -57,6 +58,13 @@ public class ListActivity extends AppCompatActivity {
             intent.putParcelableArrayListExtra("produtos_adicionados", produtosAdicionados);
             startActivity(intent);
         });
+
+        Button cancelButton = findViewById(R.id.button_cancel);
+        cancelButton.setOnClickListener(v -> {
+            Intent intent = new Intent(ListActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
+
 
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);

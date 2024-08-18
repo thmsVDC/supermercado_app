@@ -10,5 +10,6 @@
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 
+
     <style name="Theme.CRUD_operations" parent="Base.Theme.CRUD_operations" />
 </resources>

@@ -17,22 +17,34 @@
         <LinearLayout
             android:id="@+id/header"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="0.5"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:background="@color/white"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
+            <!-- EditText para busca -->
             <EditText
                 android:id="@+id/editText_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Buscar por nome"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:hint="@string/buscar_por_nome"
+                android:importantForAutofill="no"
                 android:inputType="text"
-                android:padding="10dp"/>
+                android:padding="10dp" />
+
+            <!-- Botão Cancelar -->
+            <Button
+                android:id="@+id/button_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Cancelar"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/primary"/>
 
         </LinearLayout>
-
 
         <!-- Lista de produtos -->
         <ListView
@@ -52,7 +64,6 @@
             android:orientation="horizontal"
             android:padding="10dp"
             android:gravity="center_vertical">
-
 
             <!-- Icone -->
             <ImageView
@@ -78,7 +89,6 @@
                 android:text="Ver Lista"
                 android:textColor="@color/primary"
                 android:backgroundTint="@color/white"/>
-
 
         </LinearLayout>
     </LinearLayout>

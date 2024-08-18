@@ -1,12 +1,18 @@
 package com.example.crud_operations;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.crud_operations.BDHelper.ListaProdutosBD;
@@ -31,7 +37,7 @@ public class MyListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_list);
 
         // Configurar a ListView
-        lista = findViewById(R.id.listView_my_list); // Certifique-se de que o ID está correto
+        lista = findViewById(R.id.listView_my_list);
 
         // Configurar o botão de voltar
         Button btnVoltar = findViewById(R.id.btn_voltar);
@@ -42,10 +48,7 @@ public class MyListActivity extends AppCompatActivity {
 
         // Configurar o botão de ação
         Button btnAction = findViewById(R.id.btn_action);
-        btnAction.setOnClickListener(v -> {
-            // Exemplo de ação ao clicar no botão
-            Toast.makeText(MyListActivity.this, "Botão de ação clicado", Toast.LENGTH_SHORT).show();
-        });
+        btnAction.setOnClickListener(v -> showPhoneNumberDialog());
 
         // Inicializar o helper do banco de dados
         listaBDHelper = new ListaProdutosBD(MyListActivity.this);
@@ -81,6 +84,79 @@ public class MyListActivity extends AppCompatActivity {
             lista.setAdapter(adapter);
         }
     }
+
+    private void showPhoneNumberDialog() {
+        // Verificar se há produtos na lista
+        if (listaBDHelper.getLista() == null || listaBDHelper.getLista().isEmpty()) {
+            Toast.makeText(this, "A lista de produtos está vazia. Adicione produtos antes de enviar.", Toast.LENGTH_SHORT).show();
+            return; // Não exibe o diálogo se a lista estiver vazia
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enviar para WhatsApp");
+
+        // Infla o layout personalizado
+        View customLayout = getLayoutInflater().inflate(R.layout.custom_dialog, null);
+        builder.setView(customLayout);
+
+        // Configura o EditText e o prefixo no layout personalizado
+        EditText input = customLayout.findViewById(R.id.editText_phone_number);
+        input.setHint("Digite o número de telefone");
+
+        // Define os botões do diálogo
+        builder.setPositiveButton("Enviar", (dialog, which) -> {
+            String phoneNumber = input.getText().toString().trim();
+            if (!phoneNumber.isEmpty()) {
+                // Confirmar envio
+                new AlertDialog.Builder(this)
+                        .setTitle("Confirmar envio")
+                        .setMessage("Você tem certeza que deseja enviar a lista para o número: " + phoneNumber + "?")
+                        .setPositiveButton("Sim", (dialog1, which1) -> {
+                            // Exibir o segundo diálogo informando que a mensagem está sendo enviada
+                            showSendingMessageDialog();
+                        })
+                        .setNegativeButton("Não", (dialog1, which1) -> dialog1.dismiss())
+                        .show();
+            } else {
+                Toast.makeText(MyListActivity.this, "Por favor, insira um número de telefone.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
+
+        builder.show();
+    }
+
+
+    private boolean isPhoneNumberValid(String phoneNumber) {
+        // Verifica se o número é válido. Ajuste conforme necessário.
+        return phoneNumber.matches("\\d{10,11}"); // Apenas os números, sem o prefixo
+    }
+
+
+    private void showSendingMessageDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enviando");
+        builder.setMessage("Sua lista está sendo enviada...");
+        builder.setCancelable(false);
+
+        // Cria o diálogo
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        // Simula o tempo de envio da mensagem (ajuste conforme necessário)
+        new Handler().postDelayed(() -> {
+            dialog.dismiss();
+
+            // Redirecionar para MainActivity
+            Intent intent = new Intent(MyListActivity.this, MainActivity.class);
+            startActivity(intent);
+
+            // Opcional: Adicione um efeito de animação ao voltar para a MainActivity
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        }, 2000); // 2 segundos de delay
+    }
+
+
 
     @Override
     protected void onDestroy() {
