@@ -15,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.crud_operations.BDHelper.ListaProdutosBD;
 import com.example.crud_operations.BDHelper.ProdutosBD;
 import com.example.crud_operations.model.Produtos;
 
@@ -26,6 +27,7 @@ public class ListActivity extends AppCompatActivity {
     ListView lista;
     EditText editTextSearch;
     ProdutosBD bdHelper;
+    ListaProdutosBD listaBDHelper;
     List<Produtos> listView_produtos;
     ProdutosAdapter adapter;
 
@@ -33,6 +35,10 @@ public class ListActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        getWindow().getDecorView().setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_list);
@@ -55,9 +61,6 @@ public class ListActivity extends AppCompatActivity {
             intent.putParcelableArrayListExtra("produtos_adicionados", produtosAdicionados);
             startActivity(intent);
         });
-
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
         lista = findViewById(R.id.listView_produtos);
         editTextSearch = findViewById(R.id.editText_search);
@@ -90,17 +93,19 @@ public class ListActivity extends AppCompatActivity {
 
     public void carregarProduto() {
         bdHelper = new ProdutosBD(ListActivity.this);
+        listaBDHelper = new ListaProdutosBD(ListActivity.this);
         listView_produtos = bdHelper.getLista();
         bdHelper.close();
 
         if (listView_produtos != null) {
             adapter = new ProdutosAdapter(
                     ListActivity.this,
-                    listView_produtos
+                    listView_produtos,
+                    false
             );
 
             adapter.setOnAddToListClickListener(produto -> {
-                produtosAdicionados.add(produto);
+                listaBDHelper.salvarProduto(produto);
                 Toast.makeText(ListActivity.this, "Produto adicionado à lista: " + produto.getNome(), Toast.LENGTH_SHORT).show();
             });
 

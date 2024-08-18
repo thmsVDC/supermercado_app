@@ -12,11 +12,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@id/btn_add_list"
+        app:layout_constraintEnd_toStartOf="@id/btn_action_or_remove"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
+        <!-- Informações do produto -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -98,12 +99,12 @@
         </LinearLayout>
     </LinearLayout>
 
+    <!-- Botão Adicionar/Remover -->
     <Button
-        android:id="@+id/btn_add_list"
+        android:id="@+id/btn_action_or_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Adicione à sua lista"
-        android:backgroundTint="@color/primary"
+        android:text="Adicionar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

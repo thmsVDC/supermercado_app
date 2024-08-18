@@ -10,32 +10,32 @@ import com.example.crud_operations.model.Produtos;
 
 import java.util.ArrayList;
 
-public class ProdutosBD extends SQLiteOpenHelper {
+public class ListaProdutosBD extends SQLiteOpenHelper {
 
-    private static final String DATABASE = "bdprodutos";
+    private static final String DATABASE = "listaProdutos";
     private static final int VERSION = 1;
 
-    public ProdutosBD (Context context) {
+    public ListaProdutosBD(Context context) {
         super(context, DATABASE, null, VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String produto = "CREATE TABLE produtos (" +
+        String listaProdutos = "CREATE TABLE listaProdutos (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
                 "nome TEXT NOT NULL," +
                 "marca TEXT NOT NULL," +
                 "preco DOUBLE NOT NULL," +
                 "localizacao TEXT NOT NULL);";
-        db.execSQL(produto);
+        db.execSQL(listaProdutos);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String produto = "DROP TABLE IF EXISTS produtos";
-        db.execSQL(produto);
+        String listaProdutos = "DROP TABLE IF EXISTS listaProdutos";
+        db.execSQL(listaProdutos);
+        onCreate(db);
     }
-
 
     public boolean salvarProduto(Produtos produto) {
         SQLiteDatabase db = null;
@@ -49,7 +49,7 @@ public class ProdutosBD extends SQLiteOpenHelper {
             values.put("preco", produto.getPreco());
             values.put("localizacao", produto.getLocalizacao());
 
-            id = db.insert("produtos", null, values);
+            id = db.insert("listaProdutos", null, values);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -68,20 +68,20 @@ public class ProdutosBD extends SQLiteOpenHelper {
         values.put("preco", produto.getPreco());
         values.put("localizacao", produto.getLocalizacao());
 
-        String [] args = {produto.getId().toString()};
-        getWritableDatabase().update("produtos", values, "id=?", args);
+        String[] args = {produto.getId().toString()};
+        getWritableDatabase().update("listaProdutos", values, "id=?", args);
     }
 
     public void deletarProduto(Produtos produto) {
-        String [] args = {produto.getId().toString()};
-        getWritableDatabase().delete("produtos", "id=?", args);
+        String[] args = {produto.getId().toString()};
+        getWritableDatabase().delete("listaProdutos", "id=?", args);
     }
 
     public ArrayList<Produtos> getLista() {
-        String [] columns = {"id", "nome", "marca", "preco", "localizacao"};
+        String[] columns = {"id", "nome", "marca", "preco", "localizacao"};
 
         Cursor cursor = getReadableDatabase().query(
-                "produtos",
+                "listaProdutos",
                 columns,
                 null,
                 null,
@@ -91,7 +91,7 @@ public class ProdutosBD extends SQLiteOpenHelper {
                 null
         );
 
-        ArrayList<Produtos> produtos = new ArrayList<Produtos>();
+        ArrayList<Produtos> produtos = new ArrayList<>();
 
         while (cursor.moveToNext()) {
             Produtos produto = new Produtos();
@@ -106,5 +106,19 @@ public class ProdutosBD extends SQLiteOpenHelper {
         cursor.close();
 
         return produtos;
+    }
+
+    // Novo método para resetar o banco de dados
+    public void resetDatabase() {
+        SQLiteDatabase db = null;
+        try {
+            db = getWritableDatabase();
+            db.execSQL("DROP TABLE IF EXISTS listaProdutos");
+            onCreate(db);
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
     }
 }
