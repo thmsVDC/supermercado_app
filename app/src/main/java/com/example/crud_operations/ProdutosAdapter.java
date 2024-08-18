@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.crud_operations.BDHelper.ProdutosBD;
 import com.example.crud_operations.model.Produtos;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +26,8 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
     private OnRemoveFromListClickListener onRemoveFromListClickListener;
     private ProdutoFilter filter;
     private boolean isRemoveMode;
-    private boolean isInListActivity;
-    private ProdutosBD produtosBD; // Referência ao banco de dados
+    private boolean isAdminAuthenticated;
+    private ProdutosBD produtosBD;
 
     public interface OnAddToListClickListener {
         void onAddToListClick(Produtos produto);
@@ -44,17 +45,23 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
         this.onRemoveFromListClickListener = listener;
     }
 
-    public ProdutosAdapter(Context context, List<Produtos> produtos, boolean isRemoveMode) {
+    public ProdutosAdapter(Context context, List<Produtos> produtos, boolean isRemoveMode, boolean isAdminAuthenticated) {
         super(context, 0, produtos);
         this.originalList = new ArrayList<>(produtos);
         this.filteredList = new ArrayList<>(produtos);
         this.filter = new ProdutoFilter();
         this.isRemoveMode = isRemoveMode;
-        this.produtosBD = new ProdutosBD(context); // Inicialize a referência ao banco de dados
+        this.isAdminAuthenticated = isAdminAuthenticated;
+        this.produtosBD = new ProdutosBD(context);
     }
 
     public void setRemoveMode(boolean removeMode) {
         this.isRemoveMode = removeMode;
+        notifyDataSetChanged();
+    }
+
+    public void setAdminAuthenticated(boolean adminAuthenticated) {
+        this.isAdminAuthenticated = adminAuthenticated;
         notifyDataSetChanged();
     }
 
@@ -75,7 +82,12 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
 
         textViewNome.setText(produto.getNome());
         textViewMarca.setText(produto.getMarca());
-        textViewPreco.setText(String.valueOf(produto.getPreco()));
+
+        // Formatar o preço para ter duas casas decimais
+        DecimalFormat decimalFormat = new DecimalFormat("#.00");
+        String precoFormatado = decimalFormat.format(produto.getPreco());
+        textViewPreco.setText(precoFormatado);
+
         textViewLocalizacao.setText(produto.getLocalizacao());
 
         if (isRemoveMode) {
@@ -87,9 +99,9 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
                 }
             });
 
-            imageViewGearFill.setVisibility(View.GONE); // Esconder ícone de engrenagem
+            imageViewGearFill.setVisibility(View.GONE);
         } else {
-            buttonAction.setText("Adicionar à lista");
+            buttonAction.setText("+ Adicionar à lista");
             buttonAction.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
             buttonAction.setOnClickListener(v -> {
                 if (onAddToListClickListener != null) {
@@ -97,15 +109,17 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
                 }
             });
 
-            imageViewGearFill.setVisibility(View.VISIBLE);
-            imageViewGearFill.setOnClickListener(v -> {
-                // Remover o produto do banco de dados e atualizar a lista
-                removeProdutoDoBanco(produto);
-                // Atualizar a lista para refletir a remoção
-                originalList.remove(produto);
-                filteredList.remove(produto);
-                notifyDataSetChanged();
-            });
+            if (isAdminAuthenticated) {
+                imageViewGearFill.setVisibility(View.VISIBLE);
+                imageViewGearFill.setOnClickListener(v -> {
+                    removeProdutoDoBanco(produto);
+                    originalList.remove(produto);
+                    filteredList.remove(produto);
+                    notifyDataSetChanged();
+                });
+            } else {
+                imageViewGearFill.setVisibility(View.GONE);
+            }
         }
 
         return convertView;

@@ -1,6 +1,7 @@
 package com.example.crud_operations;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -33,6 +34,10 @@ public class ListActivity extends AppCompatActivity {
     ProdutosAdapter adapter;
 
     ArrayList<Produtos> produtosAdicionados;
+    private boolean isAdminMode = false;
+
+    private static final String PREFS_NAME = "AdminPrefs";
+    private static final String KEY_IS_AUTHENTICATED = "is_authenticated";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +51,15 @@ public class ListActivity extends AppCompatActivity {
             return insets;
         });
 
-        View clickableArea = findViewById(R.id.gear_icon);
+        // Verifica se o admin está autenticado
+        SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        isAdminMode = preferences.getBoolean(KEY_IS_AUTHENTICATED, false);
+
+        View clickableArea = findViewById(R.id.icon_action);
         clickableArea.setOnClickListener(v -> {
-            Intent intent = new Intent(ListActivity.this, FormActivity.class);
+            Intent intent = isAdminMode
+                    ? new Intent(ListActivity.this, FormActivity.class)
+                    : new Intent(ListActivity.this, AdminLoginActivity.class);
             startActivity(intent);
         });
 
@@ -65,10 +76,8 @@ public class ListActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-
 
         lista = findViewById(R.id.listView_produtos);
         editTextSearch = findViewById(R.id.editText_search);
@@ -106,18 +115,39 @@ public class ListActivity extends AppCompatActivity {
         bdHelper.close();
 
         if (listView_produtos != null) {
-            adapter = new ProdutosAdapter(
-                    ListActivity.this,
-                    listView_produtos,
-                    false
-            );
+            if (adapter == null) {
+                // Cria o adaptador pela primeira vez
+                adapter = new ProdutosAdapter(
+                        ListActivity.this,
+                        listView_produtos,
+                        isAdminMode, // Passa o estado do admin para o adaptador
+                        isAdminMode  // Passa o estado do admin para o adaptador
+                );
 
-            adapter.setOnAddToListClickListener(produto -> {
-                listaBDHelper.salvarProduto(produto);
-                Toast.makeText(ListActivity.this, "Produto adicionado à lista: " + produto.getNome(), Toast.LENGTH_SHORT).show();
-            });
+                // Define o listener para adicionar produtos à lista
+                adapter.setOnAddToListClickListener(produto -> {
+                    listaBDHelper.salvarProduto(produto);
+                    Toast.makeText(ListActivity.this, "Produto adicionado à lista: " + produto.getNome(), Toast.LENGTH_SHORT).show();
+                });
 
-            lista.setAdapter(adapter);
+                // Define o listener para remover produtos da lista (somente em modo admin)
+                adapter.setOnRemoveFromListClickListener(produto -> {
+                    // Remover produto do banco de dados
+                    bdHelper.deletarProduto(produto);
+
+                    // Recarregar a lista após a remoção
+                    carregarProduto();
+
+                    Toast.makeText(ListActivity.this, "Produto removido: " + produto.getNome(), Toast.LENGTH_SHORT).show();
+                });
+
+                lista.setAdapter(adapter);
+            } else {
+                // Atualiza a lista e o adaptador, se já estiver criado
+                adapter.clear();
+                adapter.addAll(listView_produtos);
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 
