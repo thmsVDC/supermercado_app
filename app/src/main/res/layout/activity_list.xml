@@ -42,7 +42,7 @@
                 android:inputType="text"
                 android:padding="10dp" />
 
-            <!-- Botão Cancelar -->
+
             <Button
                 android:id="@+id/button_cancel"
                 android:layout_width="wrap_content"
