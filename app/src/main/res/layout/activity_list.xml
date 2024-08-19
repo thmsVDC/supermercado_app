@@ -42,7 +42,7 @@
                 android:inputType="text"
                 android:padding="10dp" />
 
-            <!-- Botão Cancelar -->
+
             <Button
                 android:id="@+id/button_cancel"
                 android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
                 android:text="Cancelar"
                 android:textColor="@color/white"
                 android:backgroundTint="@color/primary"
-                android:textSize="16sp" />
+                android:textSize="30sp" />
 
         </LinearLayout>
 
@@ -100,7 +100,7 @@
                 android:textColor="@color/primary"
                 android:backgroundTint="@color/white"
                 android:padding="16dp"
-                android:textSize="16sp"
+                android:textSize="30sp"
                 android:gravity="center"/>
 
         </LinearLayout>
