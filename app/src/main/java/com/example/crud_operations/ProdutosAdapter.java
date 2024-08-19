@@ -91,7 +91,7 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
         textViewLocalizacao.setText(produto.getLocalizacao());
 
         if (isRemoveMode) {
-            buttonAction.setText("Remover da lista");
+            buttonAction.setText("ⓧ Remover");
             buttonAction.setBackgroundColor(getContext().getResources().getColor(R.color.red));
             buttonAction.setOnClickListener(v -> {
                 if (onRemoveFromListClickListener != null) {
@@ -101,7 +101,7 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
 
             imageViewGearFill.setVisibility(View.GONE);
         } else {
-            buttonAction.setText("+ Adicionar à lista");
+            buttonAction.setText("＋ Lista");
             buttonAction.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
             buttonAction.setOnClickListener(v -> {
                 if (onAddToListClickListener != null) {
