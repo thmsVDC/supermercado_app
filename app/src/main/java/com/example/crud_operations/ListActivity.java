@@ -6,9 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,15 +32,15 @@ import java.util.List;
 
 public class ListActivity extends AppCompatActivity {
 
-    ListView lista;
-    EditText editTextSearch;
-    ProdutosBD bdHelper;
-    ListaProdutosBD listaBDHelper;
-    List<Produtos> listView_produtos;
-    ProdutosAdapter adapter;
-
-    ArrayList<Produtos> produtosAdicionados;
+    private ListView lista;
+    private EditText editTextSearch;
+    private ProdutosBD bdHelper;
+    private ListaProdutosBD listaBDHelper;
+    private List<Produtos> listView_produtos;
+    private ProdutosAdapter adapter;
+    private ArrayList<Produtos> produtosAdicionados;
     private boolean isAdminMode = false;
+    private String tipoSelecionado = null; // Inicializa a variável
 
     private static final String PREFS_NAME = "AdminPrefs";
     private static final String KEY_IS_AUTHENTICATED = "is_authenticated";
@@ -63,6 +61,7 @@ public class ListActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         isAdminMode = preferences.getBoolean(KEY_IS_AUTHENTICATED, false);
 
+        // Configura os botões
         View iconAction = findViewById(R.id.icon_action);
         iconAction.setOnClickListener(v -> {
             Intent intent = isAdminMode
@@ -111,18 +110,27 @@ public class ListActivity extends AppCompatActivity {
                 // Não faz nada depois do texto mudar
             }
         });
+
+        // Carrega a lista de produtos ao iniciar a atividade
+        carregarProduto();
     }
 
     @Override
-    public void onResume() {
+    protected void onResume() {
         super.onResume();
         carregarProduto();
     }
 
-    public void carregarProduto() {
+    private void carregarProduto() {
         bdHelper = new ProdutosBD(ListActivity.this);
         listaBDHelper = new ListaProdutosBD(ListActivity.this);
-        listView_produtos = bdHelper.getLista();
+
+        // Carrega produtos com base no tipo selecionado
+        if (tipoSelecionado != null) {
+            listView_produtos = bdHelper.getProdutosPorTipo(tipoSelecionado);
+        } else {
+            listView_produtos = bdHelper.getLista();
+        }
         bdHelper.close();
 
         if (listView_produtos != null) {
@@ -131,8 +139,8 @@ public class ListActivity extends AppCompatActivity {
                 adapter = new ProdutosAdapter(
                         ListActivity.this,
                         listView_produtos,
-                        isAdminMode, // Passa o estado do admin para o adaptador
-                        isAdminMode  // Passa o estado do admin para o adaptador
+                        isAdminMode,
+                        isAdminMode // Passa o estado do admin para o adaptador
                 );
 
                 // Define o listener para adicionar produtos à lista
@@ -143,12 +151,8 @@ public class ListActivity extends AppCompatActivity {
 
                 // Define o listener para remover produtos da lista (somente em modo admin)
                 adapter.setOnRemoveFromListClickListener(produto -> {
-                    // Remover produto do banco de dados
                     bdHelper.deletarProduto(produto);
-
-                    // Recarregar a lista após a remoção
-                    carregarProduto();
-
+                    carregarProduto(); // Recarrega a lista após a remoção
                     Toast.makeText(ListActivity.this, "Produto removido: " + produto.getNome(), Toast.LENGTH_SHORT).show();
                 });
 
@@ -169,7 +173,6 @@ public class ListActivity extends AppCompatActivity {
     }
 
     private void showTiposDialog() {
-        // Lista de tipos de produtos
         List<TipoProduto> tipos = new ArrayList<>();
         tipos.add(new TipoProduto("Açougue", R.drawable.icon_acougue));
         tipos.add(new TipoProduto("Bebidas alcoólicas", R.drawable.icon_bebidas_alcoolicas));
@@ -188,13 +191,18 @@ public class ListActivity extends AppCompatActivity {
         tipos.add(new TipoProduto("Saúde", R.drawable.icon_saude));
         tipos.add(new TipoProduto("Outros", R.drawable.icon_outros));
 
-        // Configura o adaptador
         TipoProdutoAdapter tipoProdutoAdapter = new TipoProdutoAdapter(this, tipos);
 
-        // Cria e exibe o diálogo
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Tipos de Produtos");
-        builder.setAdapter(tipoProdutoAdapter, null);
+        builder.setAdapter(tipoProdutoAdapter, (dialog, which) -> {
+            TipoProduto tipoSelecionado = tipos.get(which);
+            Toast.makeText(ListActivity.this, "Selecionado: " + tipoSelecionado.getNome(), Toast.LENGTH_SHORT).show();
+
+            // Atualiza o tipo selecionado e carrega os produtos filtrados
+            this.tipoSelecionado = tipoSelecionado.getNome();
+            carregarProduto(); // Atualiza a lista com o tipo selecionado
+        });
         builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
         AlertDialog dialog = builder.create();
         dialog.show();

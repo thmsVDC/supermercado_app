@@ -40,7 +40,8 @@
                 android:hint="@string/buscar_por_nome"
                 android:importantForAutofill="no"
                 android:inputType="text"
-                android:padding="10dp" />
+                android:padding="10dp"
+                android:textSize="30dp"/>
 
 
             <Button

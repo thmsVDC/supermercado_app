@@ -18,7 +18,7 @@
         android:backgroundTint="@color/primary"
         android:textColor="@android:color/white"
         android:padding="16dp"
-        android:textSize="18sp"
+        android:textSize="20sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -39,7 +39,9 @@
             android:layout_height="wrap_content"
             android:hint="Nome"
             android:inputType="text"
-            android:padding="16dp"/>
+            android:padding="16dp"
+            android:textSize="50sp"
+            android:layout_marginBottom="15dp"/>
 
         <EditText
             android:id="@+id/editText_marca"
@@ -47,7 +49,9 @@
             android:layout_height="wrap_content"
             android:hint="Marca"
             android:inputType="text"
-            android:padding="16dp"/>
+            android:padding="16dp"
+            android:textSize="50sp"
+            android:layout_marginBottom="15dp"/>
 
         <EditText
             android:id="@+id/editText_preco"
@@ -55,7 +59,9 @@
             android:layout_height="wrap_content"
             android:hint="Preço"
             android:inputType="numberDecimal"
-            android:padding="16dp"/>
+            android:padding="16dp"
+            android:textSize="50sp"
+            android:layout_marginBottom="15dp"/>
 
         <EditText
             android:id="@+id/editText_localizacao"
@@ -63,7 +69,20 @@
             android:layout_height="wrap_content"
             android:hint="Localização"
             android:inputType="text"
-            android:padding="16dp"/>
+            android:padding="16dp"
+            android:textSize="50sp"
+            android:layout_marginBottom="15dp"/>
+
+        <!-- Spinner para Seleção de Tipo -->
+        <Spinner
+            android:id="@+id/spinner_tipo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:spinnerMode="dropdown"
+            android:layout_marginTop="16dp"
+            android:background="@color/gray"
+            android:textSize="20sp"/>
     </LinearLayout>
 
     <!-- Barra inferior com o botão "Cadastrar" -->
@@ -86,7 +105,7 @@
             android:textColor="@android:color/white"
             android:backgroundTint="@color/primary"
             android:padding="16dp"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:gravity="center"/>
     </LinearLayout>
 

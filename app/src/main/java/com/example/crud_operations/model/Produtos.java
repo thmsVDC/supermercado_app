@@ -12,6 +12,15 @@ public class Produtos implements Parcelable {
     private String marca;
     private double preco;
     private String localizacao;
+    private String tipo;
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
 
     // Construtor padrão
     public Produtos() {

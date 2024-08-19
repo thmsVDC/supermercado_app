@@ -133,7 +133,7 @@ public class MyListActivity extends AppCompatActivity {
                         .setTitle("Confirmar envio")
                         .setMessage("Você tem certeza que deseja enviar a lista para o número: " + phoneNumber + "?")
                         .setPositiveButton("Sim", (dialog1, which1) -> {
-                            // Exibir o segundo diálogo informando que a mensagem está sendo enviada
+                            // Exibir o diálogo de envio
                             showSendingMessageDialog();
                         })
                         .setNegativeButton("Não", (dialog1, which1) -> dialog1.dismiss())
@@ -145,11 +145,6 @@ public class MyListActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
 
         builder.show();
-    }
-
-    private boolean isPhoneNumberValid(String phoneNumber) {
-        // Verifica se o número é válido. Ajuste conforme necessário.
-        return phoneNumber.matches("\\d{10,11}"); // Apenas os números, sem o prefixo
     }
 
     private void showSendingMessageDialog() {
@@ -166,13 +161,26 @@ public class MyListActivity extends AppCompatActivity {
         new Handler().postDelayed(() -> {
             dialog.dismiss();
 
-            // Redirecionar para MainActivity
-            Intent intent = new Intent(MyListActivity.this, MainActivity.class);
-            startActivity(intent);
-
-            // Opcional: Adicione um efeito de animação ao voltar para a MainActivity
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            // Exibir o diálogo de mensagem enviada
+            showMessageSentDialog();
         }, 2000); // 2 segundos de delay
+    }
+
+    private void showMessageSentDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enviado");
+        builder.setMessage("Sua lista foi enviada com sucesso!")
+                .setIcon(R.drawable.icon_done) // Substitua 'icon_done' pelo drawable apropriado
+                .setPositiveButton("OK", (dialog, which) -> {
+                    // Redirecionar para MainActivity
+                    Intent intent = new Intent(MyListActivity.this, MainActivity.class);
+                    startActivity(intent);
+
+                    // Opcional: Adicione um efeito de animação ao voltar para a MainActivity
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                });
+
+        builder.show();
     }
 
     @Override
@@ -183,4 +191,3 @@ public class MyListActivity extends AppCompatActivity {
         }
     }
 }
-

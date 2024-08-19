@@ -13,29 +13,31 @@ import java.util.ArrayList;
 public class ProdutosBD extends SQLiteOpenHelper {
 
     private static final String DATABASE = "bdprodutos";
-    private static final int VERSION = 1;
+    private static final int VERSION = 2;
 
-    public ProdutosBD (Context context) {
+    public ProdutosBD(Context context) {
         super(context, DATABASE, null, VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String produto = "CREATE TABLE produtos (" +
+        String createTable = "CREATE TABLE produtos (" +
                 "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
                 "nome TEXT NOT NULL," +
                 "marca TEXT NOT NULL," +
                 "preco DOUBLE NOT NULL," +
-                "localizacao TEXT NOT NULL);";
-        db.execSQL(produto);
+                "localizacao TEXT NOT NULL," +
+                "tipo TEXT NOT NULL DEFAULT '');";
+        db.execSQL(createTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String produto = "DROP TABLE IF EXISTS produtos";
-        db.execSQL(produto);
+        if (oldVersion < 2) {
+            String alterTable = "ALTER TABLE produtos ADD COLUMN tipo TEXT NOT NULL DEFAULT '';";
+            db.execSQL(alterTable);
+        }
     }
-
 
     public boolean salvarProduto(Produtos produto) {
         SQLiteDatabase db = null;
@@ -43,11 +45,11 @@ public class ProdutosBD extends SQLiteOpenHelper {
         try {
             db = getWritableDatabase();
             ContentValues values = new ContentValues();
-
             values.put("nome", produto.getNome());
             values.put("marca", produto.getMarca());
             values.put("preco", produto.getPreco());
             values.put("localizacao", produto.getLocalizacao());
+            values.put("tipo", produto.getTipo());
 
             id = db.insert("produtos", null, values);
         } catch (Exception e) {
@@ -66,11 +68,11 @@ public class ProdutosBD extends SQLiteOpenHelper {
         try {
             db = getWritableDatabase();
             ContentValues values = new ContentValues();
-
             values.put("nome", produto.getNome());
             values.put("marca", produto.getMarca());
             values.put("preco", produto.getPreco());
             values.put("localizacao", produto.getLocalizacao());
+            values.put("tipo", produto.getTipo());
 
             String[] args = {produto.getId().toString()};
             rowsAffected = db.update("produtos", values, "id=?", args);
@@ -85,38 +87,161 @@ public class ProdutosBD extends SQLiteOpenHelper {
     }
 
     public void deletarProduto(Produtos produto) {
-        String [] args = {produto.getId().toString()};
-        getWritableDatabase().delete("produtos", "id=?", args);
+        SQLiteDatabase db = null;
+        try {
+            db = getWritableDatabase();
+            String[] args = {produto.getId().toString()};
+            db.delete("produtos", "id=?", args);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
     }
 
     public ArrayList<Produtos> getLista() {
-        String [] columns = {"id", "nome", "marca", "preco", "localizacao"};
+        ArrayList<Produtos> produtos = new ArrayList<>();
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = getReadableDatabase();
+            String[] columns = {"id", "nome", "marca", "preco", "localizacao", "tipo"};
 
-        Cursor cursor = getReadableDatabase().query(
-                "produtos",
-                columns,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null
-        );
+            cursor = db.query(
+                    "produtos",
+                    columns,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
 
-        ArrayList<Produtos> produtos = new ArrayList<Produtos>();
+            while (cursor.moveToNext()) {
+                Produtos produto = new Produtos();
+                produto.setId(cursor.getLong(0));
+                produto.setNome(cursor.getString(1));
+                produto.setMarca(cursor.getString(2));
+                produto.setPreco(cursor.getDouble(3));
+                produto.setLocalizacao(cursor.getString(4));
+                produto.setTipo(cursor.getString(5));
 
-        while (cursor.moveToNext()) {
-            Produtos produto = new Produtos();
-            produto.setId(cursor.getLong(0));
-            produto.setNome(cursor.getString(1));
-            produto.setMarca(cursor.getString(2));
-            produto.setPreco(cursor.getDouble(3));
-            produto.setLocalizacao(cursor.getString(4));
-
-            produtos.add(produto);
+                produtos.add(produto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
         }
-        cursor.close();
+        return produtos;
+    }
 
+
+
+
+
+
+
+
+
+
+
+    public ArrayList<Produtos> getListaPorTipo(String tipo) {
+        ArrayList<Produtos> produtos = new ArrayList<>();
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = getReadableDatabase();
+            String[] columns = {"id", "nome", "marca", "preco", "localizacao", "tipo"};
+
+            // Define a cláusula WHERE e os argumentos
+            String selection = "tipo = ?";
+            String[] selectionArgs = { tipo };
+
+            cursor = db.query(
+                    "produtos",
+                    columns,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    null
+            );
+
+            while (cursor.moveToNext()) {
+                Produtos produto = new Produtos();
+                produto.setId(cursor.getLong(0));
+                produto.setNome(cursor.getString(1));
+                produto.setMarca(cursor.getString(2));
+                produto.setPreco(cursor.getDouble(3));
+                produto.setLocalizacao(cursor.getString(4));
+                produto.setTipo(cursor.getString(5));
+
+                produtos.add(produto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return produtos;
+    }
+
+
+
+    public ArrayList<Produtos> getProdutosPorTipo(String tipo) {
+        ArrayList<Produtos> produtos = new ArrayList<>();
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = getReadableDatabase();
+            String[] columns = {"id", "nome", "marca", "preco", "localizacao", "tipo"};
+            String selection = "tipo = ?";
+            String[] selectionArgs = {tipo};
+
+            cursor = db.query(
+                    "produtos",
+                    columns,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    null
+            );
+
+            while (cursor.moveToNext()) {
+                Produtos produto = new Produtos();
+                produto.setId(cursor.getLong(0));
+                produto.setNome(cursor.getString(1));
+                produto.setMarca(cursor.getString(2));
+                produto.setPreco(cursor.getDouble(3));
+                produto.setLocalizacao(cursor.getString(4));
+                produto.setTipo(cursor.getString(5));
+
+                produtos.add(produto);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
         return produtos;
     }
 }
