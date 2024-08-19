@@ -154,6 +154,7 @@ public class ListActivity extends AppCompatActivity {
                     bdHelper.deletarProduto(produto);
                     carregarProduto(); // Recarrega a lista após a remoção
                     Toast.makeText(ListActivity.this, "Produto removido: " + produto.getNome(), Toast.LENGTH_SHORT).show();
+                    recreate();
                 });
 
                 lista.setAdapter(adapter);
