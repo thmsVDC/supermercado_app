@@ -5,7 +5,8 @@
     android:background="@drawable/item_background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:elevation="4dp">
 
     <LinearLayout
         android:id="@+id/container_info"
@@ -83,16 +84,20 @@
         </LinearLayout>
     </LinearLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_action_or_remove"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Adicionar"
         android:textSize="40sp"
         android:textColor="@android:color/white"
+        android:padding="12dp"
+        android:layout_margin="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center"/>
+
 
     <ImageView
         android:id="@+id/img_gear_fill"

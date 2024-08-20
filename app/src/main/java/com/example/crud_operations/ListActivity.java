@@ -126,16 +126,15 @@ public class ListActivity extends AppCompatActivity {
         listaBDHelper = new ListaProdutosBD(ListActivity.this);
 
         // Carrega produtos com base no tipo selecionado
-        if (tipoSelecionado != null) {
-            listView_produtos = bdHelper.getProdutosPorTipo(tipoSelecionado);
-        } else {
+        if (tipoSelecionado == null || tipoSelecionado.equals("Sem filtro")) {
             listView_produtos = bdHelper.getLista();
+        } else {
+            listView_produtos = bdHelper.getProdutosPorTipo(tipoSelecionado);
         }
         bdHelper.close();
 
         if (listView_produtos != null) {
             if (adapter == null) {
-                // Cria o adaptador pela primeira vez
                 adapter = new ProdutosAdapter(
                         ListActivity.this,
                         listView_produtos,
@@ -143,13 +142,11 @@ public class ListActivity extends AppCompatActivity {
                         isAdminMode // Passa o estado do admin para o adaptador
                 );
 
-                // Define o listener para adicionar produtos à lista
                 adapter.setOnAddToListClickListener(produto -> {
                     listaBDHelper.salvarProduto(produto);
                     Toast.makeText(ListActivity.this, "Produto adicionado à lista: " + produto.getNome(), Toast.LENGTH_SHORT).show();
                 });
 
-                // Define o listener para remover produtos da lista (somente em modo admin)
                 adapter.setOnRemoveFromListClickListener(produto -> {
                     bdHelper.deletarProduto(produto);
                     carregarProduto(); // Recarrega a lista após a remoção
@@ -167,6 +164,7 @@ public class ListActivity extends AppCompatActivity {
         }
     }
 
+
     private void filterList(String query) {
         if (adapter != null) {
             adapter.getFilter().filter(query);
@@ -175,21 +173,21 @@ public class ListActivity extends AppCompatActivity {
 
     private void showTiposDialog() {
         List<TipoProduto> tipos = new ArrayList<>();
-        tipos.add(new TipoProduto("Açougue", R.drawable.icon_acougue));
+        tipos.add(new TipoProduto("Sem filtro", R.drawable.icon_sem_filtro));
         tipos.add(new TipoProduto("Bebidas alcoólicas", R.drawable.icon_bebidas_alcoolicas));
+        tipos.add(new TipoProduto("Carne e frutos do mar", R.drawable.icon_acougue));
         tipos.add(new TipoProduto("Casa", R.drawable.icon_casa));
         tipos.add(new TipoProduto("Frios", R.drawable.icon_frios));
         tipos.add(new TipoProduto("Frutas", R.drawable.icon_frutas));
         tipos.add(new TipoProduto("Higiene pessoal", R.drawable.icon_higiene_pessoal));
         tipos.add(new TipoProduto("Laticínios", R.drawable.icon_laticinios));
-        tipos.add(new TipoProduto("Horti-Fruti", R.drawable.icon_horti_fruti));
+        tipos.add(new TipoProduto("HortiFruti", R.drawable.icon_horti_fruti));
         tipos.add(new TipoProduto("Não perecíveis", R.drawable.icon_nao_pereciveis));
         tipos.add(new TipoProduto("Origem animal", R.drawable.icon_origem_animal));
         tipos.add(new TipoProduto("Padaria", R.drawable.icon_padaria));
         tipos.add(new TipoProduto("Produtos de limpeza", R.drawable.icon_produtos_limpeza));
         tipos.add(new TipoProduto("Produtos para pets", R.drawable.icon_produtos_pets));
-        tipos.add(new TipoProduto("Refrigerantes", R.drawable.icon_refrigerantes));
-        tipos.add(new TipoProduto("Saúde", R.drawable.icon_saude));
+        tipos.add(new TipoProduto("Bebidas", R.drawable.icon_refrigerantes));
         tipos.add(new TipoProduto("Outros", R.drawable.icon_outros));
 
         TipoProdutoAdapter tipoProdutoAdapter = new TipoProdutoAdapter(this, tipos);
@@ -200,11 +198,17 @@ public class ListActivity extends AppCompatActivity {
             TipoProduto tipoSelecionado = tipos.get(which);
             Toast.makeText(ListActivity.this, "Selecionado: " + tipoSelecionado.getNome(), Toast.LENGTH_SHORT).show();
 
-            // Atualiza o tipo selecionado e carrega os produtos filtrados
-            this.tipoSelecionado = tipoSelecionado.getNome();
-            carregarProduto(); // Atualiza a lista com o tipo selecionado
+            // Atualiza o tipo selecionado e o filtro
+            if ("Sem filtro".equals(tipoSelecionado.getNome())) {
+                this.tipoSelecionado = null; // Define como null para indicar que não há filtro
+            } else {
+                this.tipoSelecionado = tipoSelecionado.getNome();
+            }
+            adapter.setTipoFiltro(this.tipoSelecionado);
+
+            carregarProduto();
         });
-        builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
+
         AlertDialog dialog = builder.create();
         dialog.show();
     }

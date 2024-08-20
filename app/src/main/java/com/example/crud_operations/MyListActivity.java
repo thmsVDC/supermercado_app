@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,7 +45,7 @@ public class MyListActivity extends AppCompatActivity {
         textViewTotalPrice = findViewById(R.id.textView_total_price);
 
         // Configurar o botão de voltar
-        Button btnVoltar = findViewById(R.id.btn_voltar);
+        ImageView btnVoltar = findViewById(R.id.icon_voltar);
         btnVoltar.setOnClickListener(v -> {
             Intent intent = new Intent(MyListActivity.this, ListActivity.class);
             startActivity(intent);

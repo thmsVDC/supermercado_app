@@ -20,14 +20,15 @@ import java.util.List;
 
 public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterable {
 
-    private List<Produtos> originalList;
+    private final List<Produtos> originalList;
     private List<Produtos> filteredList;
     private OnAddToListClickListener onAddToListClickListener;
     private OnRemoveFromListClickListener onRemoveFromListClickListener;
     private ProdutoFilter filter;
     private boolean isRemoveMode;
     private boolean isAdminAuthenticated;
-    private ProdutosBD produtosBD;
+    private final ProdutosBD produtosBD;
+    private String tipoFiltro;
 
     public interface OnAddToListClickListener {
         void onAddToListClick(Produtos produto);
@@ -65,6 +66,11 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
         notifyDataSetChanged();
     }
 
+    public void setTipoFiltro(String tipo) {
+        this.tipoFiltro = tipo;
+        getFilter().filter(null); // Reaplica o filtro com o novo tipo
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -92,17 +98,16 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
 
         if (isRemoveMode) {
             buttonAction.setText("ⓧ Remover");
-            buttonAction.setBackgroundColor(getContext().getResources().getColor(R.color.red));
+            buttonAction.setBackgroundResource(R.drawable.remover); // Define o drawable para o estado de remover
             buttonAction.setOnClickListener(v -> {
                 if (onRemoveFromListClickListener != null) {
                     onRemoveFromListClickListener.onRemoveFromListClick(produto);
                 }
             });
-
             imageViewGearFill.setVisibility(View.GONE);
         } else {
             buttonAction.setText("＋ Lista");
-            buttonAction.setBackgroundColor(getContext().getResources().getColor(R.color.primary));
+            buttonAction.setBackgroundResource(R.drawable.adicionar); // Define o drawable para o estado de adicionar
             buttonAction.setOnClickListener(v -> {
                 if (onAddToListClickListener != null) {
                     onAddToListClickListener.onAddToListClick(produto);
@@ -155,11 +160,16 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
             List<Produtos> filteredResults = new ArrayList<>();
 
             if (constraint == null || constraint.length() == 0) {
-                filteredResults.addAll(originalList);
+                for (Produtos produto : originalList) {
+                    if (tipoFiltro == null || tipoFiltro.isEmpty() || produto.getTipo().equalsIgnoreCase(tipoFiltro)) {
+                        filteredResults.add(produto);
+                    }
+                }
             } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
                 for (Produtos produto : originalList) {
-                    if (produto.getNome().toLowerCase().contains(filterPattern)) {
+                    if (produto.getNome().toLowerCase().contains(filterPattern) &&
+                            (tipoFiltro == null || tipoFiltro.isEmpty() || produto.getTipo().equalsIgnoreCase(tipoFiltro))) {
                         filteredResults.add(produto);
                     }
                 }

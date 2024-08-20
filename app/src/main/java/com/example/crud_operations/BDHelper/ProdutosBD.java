@@ -143,64 +143,6 @@ public class ProdutosBD extends SQLiteOpenHelper {
         return produtos;
     }
 
-
-
-
-
-
-
-
-
-
-
-    public ArrayList<Produtos> getListaPorTipo(String tipo) {
-        ArrayList<Produtos> produtos = new ArrayList<>();
-        SQLiteDatabase db = null;
-        Cursor cursor = null;
-        try {
-            db = getReadableDatabase();
-            String[] columns = {"id", "nome", "marca", "preco", "localizacao", "tipo"};
-
-            // Define a cláusula WHERE e os argumentos
-            String selection = "tipo = ?";
-            String[] selectionArgs = { tipo };
-
-            cursor = db.query(
-                    "produtos",
-                    columns,
-                    selection,
-                    selectionArgs,
-                    null,
-                    null,
-                    null
-            );
-
-            while (cursor.moveToNext()) {
-                Produtos produto = new Produtos();
-                produto.setId(cursor.getLong(0));
-                produto.setNome(cursor.getString(1));
-                produto.setMarca(cursor.getString(2));
-                produto.setPreco(cursor.getDouble(3));
-                produto.setLocalizacao(cursor.getString(4));
-                produto.setTipo(cursor.getString(5));
-
-                produtos.add(produto);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-            if (db != null) {
-                db.close();
-            }
-        }
-        return produtos;
-    }
-
-
-
     public ArrayList<Produtos> getProdutosPorTipo(String tipo) {
         ArrayList<Produtos> produtos = new ArrayList<>();
         SQLiteDatabase db = null;
