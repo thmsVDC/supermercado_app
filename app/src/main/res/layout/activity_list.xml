@@ -44,17 +44,6 @@
                 android:padding="10dp"
                 android:textSize="30sp"/>
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/button_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="Cancelar"
-                android:textColor="@color/white"
-                android:background="@drawable/footer_background"
-                android:padding="10dp"
-                android:textSize="30sp" />
-
         </LinearLayout>
 
         <!-- Lista de produtos -->
@@ -89,18 +78,27 @@
         app:layout_constraintHorizontal_bias="0.5"
         android:elevation="4dp">
 
-        <!-- Ícone (Engrenagem) -->
-        <ImageView
-            android:id="@+id/icon_action"
-            android:layout_width="27dp"
+        <!-- Botão de Cancelar Busca -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_cancel"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="4"
             android:layout_marginStart="16dp"
-            app:srcCompat="@drawable/gear_fill" />
+            android:text="Cancelar Busca"
+            android:textColor="@color/primary"
+            android:backgroundTint="@color/white"
+            android:background="@drawable/footer_background"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:textSize="36sp"
+            android:gravity="center"
+            android:textStyle="bold" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="0.3" />
+            android:layout_weight="2"/>
 
 
         <!-- Botão para redirecionar para MyListActivity -->
@@ -108,7 +106,7 @@
             android:id="@+id/btn_view_my_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.4"
+            android:layout_weight="4"
             android:text="Ver sua Lista"
             android:textColor="@color/primary"
             android:backgroundTint="@color/white"
@@ -117,7 +115,8 @@
             android:textSize="36sp"
             android:gravity="center"
             android:textStyle="bold"
-            android:layout_marginStart="500dp"/>
+            android:layout_marginRight="5dp"/>
 
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

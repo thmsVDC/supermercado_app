@@ -7,12 +7,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -61,26 +58,36 @@ public class ListActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         isAdminMode = preferences.getBoolean(KEY_IS_AUTHENTICATED, false);
 
-        // Configura os botões
-        View iconAction = findViewById(R.id.icon_action);
-        iconAction.setOnClickListener(v -> {
-            Intent intent = isAdminMode
-                    ? new Intent(ListActivity.this, FormActivity.class)
-                    : new Intent(ListActivity.this, AdminLoginActivity.class);
-            startActivity(intent);
-        });
-
         Button btnViewMyList = findViewById(R.id.btn_view_my_list);
+        Button cancelButton = findViewById(R.id.button_cancel);
+
+        // Configura o botão "Ver minha lista"
         btnViewMyList.setOnClickListener(v -> {
             Intent intent = new Intent(ListActivity.this, MyListActivity.class);
             intent.putParcelableArrayListExtra("produtos_adicionados", produtosAdicionados);
             startActivity(intent);
         });
 
-        Button cancelButton = findViewById(R.id.button_cancel);
+        btnViewMyList.setOnLongClickListener(v -> {
+            Intent intent = isAdminMode
+                    ? new Intent(ListActivity.this, FormActivity.class)
+                    : new Intent(ListActivity.this, AdminLoginActivity.class);
+            startActivity(intent);
+            return true; // Indica que o long click foi consumido
+        });
+
+        // Configura o botão "Cancelar busca"
         cancelButton.setOnClickListener(v -> {
             Intent intent = new Intent(ListActivity.this, MainActivity.class);
             startActivity(intent);
+        });
+
+        cancelButton.setOnLongClickListener(v -> {
+            Intent intent = isAdminMode
+                    ? new Intent(ListActivity.this, FormActivity.class)
+                    : new Intent(ListActivity.this, AdminLoginActivity.class);
+            startActivity(intent);
+            return true; // Indica que o long click foi consumido
         });
 
         View btnShowTypes = findViewById(R.id.icon_tipos);
@@ -139,7 +146,8 @@ public class ListActivity extends AppCompatActivity {
                         ListActivity.this,
                         listView_produtos,
                         isAdminMode,
-                        isAdminMode // Passa o estado do admin para o adaptador
+                        isAdminMode,
+                        false
                 );
 
                 adapter.setOnAddToListClickListener(produto -> {
@@ -163,7 +171,6 @@ public class ListActivity extends AppCompatActivity {
             }
         }
     }
-
 
     private void filterList(String query) {
         if (adapter != null) {

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +16,7 @@ public class AdminLoginActivity extends AppCompatActivity {
     private EditText editTextUsername;
     private EditText editTextPassword;
     private Button buttonAuthenticate;
-    private Button buttonBack;
+    private ImageView buttonBack;
 
     private static final String PREFS_NAME = "AdminPrefs";
     private static final String KEY_IS_AUTHENTICATED = "is_authenticated";
@@ -33,7 +34,7 @@ public class AdminLoginActivity extends AppCompatActivity {
         editTextUsername = findViewById(R.id.editText_username);
         editTextPassword = findViewById(R.id.editText_password);
         buttonAuthenticate = findViewById(R.id.button_authenticate);
-        buttonBack = findViewById(R.id.button_back);
+        buttonBack = findViewById(R.id.icon_voltar);
 
         // Configuração dos eventos de clique
         buttonAuthenticate.setOnClickListener(v -> authenticate());
