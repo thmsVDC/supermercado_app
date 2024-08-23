@@ -13,6 +13,7 @@ public class Produtos implements Parcelable {
     private double preco;
     private String localizacao;
     private String tipo;
+    private int quantidade; // Novo campo para quantidade
 
     public String getTipo() {
         return tipo;
@@ -20,6 +21,14 @@ public class Produtos implements Parcelable {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public int getQuantidade() {
+        return quantidade; // Getter para quantidade
+    }
+
+    public void setQuantidade(int quantidade) {
+        this.quantidade = quantidade; // Setter para quantidade
     }
 
     // Construtor padrão
@@ -33,6 +42,8 @@ public class Produtos implements Parcelable {
         marca = in.readString();
         preco = in.readDouble();
         localizacao = in.readString();
+        tipo = in.readString(); // Ler tipo do Parcel
+        quantidade = in.readInt(); // Ler quantidade do Parcel
     }
 
     public static final Creator<Produtos> CREATOR = new Creator<Produtos>() {
@@ -54,6 +65,8 @@ public class Produtos implements Parcelable {
         dest.writeString(marca);
         dest.writeDouble(preco);
         dest.writeString(localizacao);
+        dest.writeString(tipo); // Escrever tipo no Parcel
+        dest.writeInt(quantidade); // Escrever quantidade no Parcel
     }
 
     @Override

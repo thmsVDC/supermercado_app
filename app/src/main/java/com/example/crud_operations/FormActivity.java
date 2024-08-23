@@ -45,7 +45,7 @@ public class FormActivity extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
-        View clickableArea = findViewById(R.id.btn_voltar);
+        View clickableArea = findViewById(R.id.icon_voltar);
         clickableArea.setOnClickListener(view -> {
             Intent intent = new Intent(FormActivity.this, ListActivity.class);
             startActivity(intent);
@@ -69,7 +69,7 @@ public class FormActivity extends AppCompatActivity {
         // Lista de tipos
         final ArrayList<String> tipos = new ArrayList<>(Arrays.asList(
                 "Tipo",
-                "Açougue",
+                "Carne e frutos do mar",
                 "Bebidas alcoólicas",
                 "Casa",
                 "Frios",

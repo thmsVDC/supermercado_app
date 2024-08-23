@@ -29,6 +29,7 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
     private boolean isAdminAuthenticated;
     private final ProdutosBD produtosBD;
     private String tipoFiltro;
+    private boolean showQuantity; // Flag para mostrar a quantidade
 
     public interface OnAddToListClickListener {
         void onAddToListClick(Produtos produto);
@@ -46,7 +47,7 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
         this.onRemoveFromListClickListener = listener;
     }
 
-    public ProdutosAdapter(Context context, List<Produtos> produtos, boolean isRemoveMode, boolean isAdminAuthenticated) {
+    public ProdutosAdapter(Context context, List<Produtos> produtos, boolean isRemoveMode, boolean isAdminAuthenticated, boolean showQuantity) {
         super(context, 0, produtos);
         this.originalList = new ArrayList<>(produtos);
         this.filteredList = new ArrayList<>(produtos);
@@ -54,6 +55,7 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
         this.isRemoveMode = isRemoveMode;
         this.isAdminAuthenticated = isAdminAuthenticated;
         this.produtosBD = new ProdutosBD(context);
+        this.showQuantity = showQuantity; // Inicializa a flag para mostrar a quantidade
     }
 
     public void setRemoveMode(boolean removeMode) {
@@ -71,6 +73,11 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
         getFilter().filter(null); // Reaplica o filtro com o novo tipo
     }
 
+    public void setShowQuantity(boolean showQuantity) {
+        this.showQuantity = showQuantity;
+        notifyDataSetChanged(); // Atualiza a visualização ao alterar a flag
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -83,6 +90,7 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
         TextView textViewMarca = convertView.findViewById(R.id.textView_marca_valor);
         TextView textViewPreco = convertView.findViewById(R.id.textView_preco_valor);
         TextView textViewLocalizacao = convertView.findViewById(R.id.textView_localizacao_valor);
+        TextView textViewQuantidade = convertView.findViewById(R.id.textView_quantidade_valor); // Adicionei este TextView
         Button buttonAction = convertView.findViewById(R.id.btn_action_or_remove);
         ImageView imageViewGearFill = convertView.findViewById(R.id.img_gear_fill);
 
@@ -105,6 +113,7 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
                 }
             });
             imageViewGearFill.setVisibility(View.GONE);
+            textViewQuantidade.setVisibility(View.GONE); // Oculta a quantidade na ListActivity
         } else {
             buttonAction.setText("＋ Lista");
             buttonAction.setBackgroundResource(R.drawable.adicionar); // Define o drawable para o estado de adicionar
@@ -124,6 +133,14 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
                 });
             } else {
                 imageViewGearFill.setVisibility(View.GONE);
+            }
+
+            // Exibe a quantidade apenas se a flag showQuantity estiver ativada
+            if (showQuantity) {
+                textViewQuantidade.setText("x" + produto.getQuantidade());
+                textViewQuantidade.setVisibility(View.VISIBLE);
+            } else {
+                textViewQuantidade.setVisibility(View.GONE);
             }
         }
 
