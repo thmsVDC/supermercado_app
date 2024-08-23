@@ -1,12 +1,16 @@
 package com.example.crud_operations;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -16,13 +20,16 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.crud_operations.BDHelper.ListaProdutosBD;
 import com.example.crud_operations.BDHelper.ProdutosBD;
 import com.example.crud_operations.model.Produtos;
 import com.example.crud_operations.model.TipoProduto;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +44,13 @@ public class ListActivity extends AppCompatActivity {
     private ProdutosAdapter adapter;
     private ArrayList<Produtos> produtosAdicionados;
     private boolean isAdminMode = false;
-    private String tipoSelecionado = null; // Inicializa a variável
+    private String tipoSelecionado = null;
+    private DrawerLayout drawerLayout;
 
     private static final String PREFS_NAME = "AdminPrefs";
     private static final String KEY_IS_AUTHENTICATED = "is_authenticated";
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,40 +63,53 @@ public class ListActivity extends AppCompatActivity {
             return insets;
         });
 
+        // Adiciona o listener para ocultar o teclado ao tocar em qualquer lugar
+        addOnTouchListenerToViews();
+
+        // Inicializa o DrawerLayout e a NavigationView
+        drawerLayout = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.navigation_view);
+
+        // Configura o botão "Abrir Sidebar"
+        View iconSidebar = findViewById(R.id.icon_sidebar);
+        iconSidebar.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+
         // Verifica se o admin está autenticado
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         isAdminMode = preferences.getBoolean(KEY_IS_AUTHENTICATED, false);
 
-        Button btnViewMyList = findViewById(R.id.btn_view_my_list);
-        Button cancelButton = findViewById(R.id.button_cancel);
+        // Configura o listener do NavigationView
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_settings) {
+                Intent intent = new Intent(ListActivity.this, AdminLoginActivity.class);
+                startActivity(intent);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            } else if (id == R.id.nav_add_product) {
+                Intent intent = new Intent(ListActivity.this, FormActivity.class);
+                startActivity(intent);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+            return false;
+        });
 
-        // Configura o botão "Ver minha lista"
+        // Ajustar visibilidade do item "Adicionar Produto"
+        navigationView.getMenu().findItem(R.id.nav_add_product).setVisible(isAdminMode);
+
+        // Configura os botões da atividade
+        Button btnViewMyList = findViewById(R.id.btn_view_my_list);
         btnViewMyList.setOnClickListener(v -> {
             Intent intent = new Intent(ListActivity.this, MyListActivity.class);
             intent.putParcelableArrayListExtra("produtos_adicionados", produtosAdicionados);
             startActivity(intent);
         });
 
-        btnViewMyList.setOnLongClickListener(v -> {
-            Intent intent = isAdminMode
-                    ? new Intent(ListActivity.this, FormActivity.class)
-                    : new Intent(ListActivity.this, AdminLoginActivity.class);
-            startActivity(intent);
-            return true; // Indica que o long click foi consumido
-        });
-
-        // Configura o botão "Cancelar busca"
+        Button cancelButton = findViewById(R.id.button_cancel);
         cancelButton.setOnClickListener(v -> {
             Intent intent = new Intent(ListActivity.this, MainActivity.class);
             startActivity(intent);
-        });
-
-        cancelButton.setOnLongClickListener(v -> {
-            Intent intent = isAdminMode
-                    ? new Intent(ListActivity.this, FormActivity.class)
-                    : new Intent(ListActivity.this, AdminLoginActivity.class);
-            startActivity(intent);
-            return true; // Indica que o long click foi consumido
         });
 
         View btnShowTypes = findViewById(R.id.icon_tipos);
@@ -132,7 +154,6 @@ public class ListActivity extends AppCompatActivity {
         bdHelper = new ProdutosBD(ListActivity.this);
         listaBDHelper = new ListaProdutosBD(ListActivity.this);
 
-        // Carrega produtos com base no tipo selecionado
         if (tipoSelecionado == null || tipoSelecionado.equals("Sem filtro")) {
             listView_produtos = bdHelper.getLista();
         } else {
@@ -157,14 +178,13 @@ public class ListActivity extends AppCompatActivity {
 
                 adapter.setOnRemoveFromListClickListener(produto -> {
                     bdHelper.deletarProduto(produto);
-                    carregarProduto(); // Recarrega a lista após a remoção
+                    carregarProduto();
                     Toast.makeText(ListActivity.this, "Produto removido: " + produto.getNome(), Toast.LENGTH_SHORT).show();
                     recreate();
                 });
 
                 lista.setAdapter(adapter);
             } else {
-                // Atualiza a lista e o adaptador, se já estiver criado
                 adapter.clear();
                 adapter.addAll(listView_produtos);
                 adapter.notifyDataSetChanged();
@@ -206,11 +226,7 @@ public class ListActivity extends AppCompatActivity {
             Toast.makeText(ListActivity.this, "Selecionado: " + tipoSelecionado.getNome(), Toast.LENGTH_SHORT).show();
 
             // Atualiza o tipo selecionado e o filtro
-            if ("Sem filtro".equals(tipoSelecionado.getNome())) {
-                this.tipoSelecionado = null; // Define como null para indicar que não há filtro
-            } else {
-                this.tipoSelecionado = tipoSelecionado.getNome();
-            }
+            this.tipoSelecionado = "Sem filtro".equals(tipoSelecionado.getNome()) ? null : tipoSelecionado.getNome();
             adapter.setTipoFiltro(this.tipoSelecionado);
 
             carregarProduto();
@@ -218,5 +234,37 @@ public class ListActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    // Método para adicionar o OnTouchListener a todos os IDs
+    @SuppressLint("ClickableViewAccessibility")
+    private void addOnTouchListenerToViews() {
+        int[] viewIds = {
+                R.id.main,
+                R.id.header,
+                R.id.listView_produtos,
+                R.id.footer,
+                R.id.icon_tipos,
+                R.id.button_cancel,
+                R.id.btn_view_my_list
+                // Adicione outros IDs conforme necessário
+        };
+
+        for (int id : viewIds) {
+            View view = findViewById(id);
+            if (view != null) {
+                view.setOnTouchListener((v, event) -> {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        View focusedView = getCurrentFocus();
+                        if (focusedView != null) {
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+                            focusedView.clearFocus();
+                        }
+                    }
+                    return false;
+                });
+            }
+        }
     }
 }
