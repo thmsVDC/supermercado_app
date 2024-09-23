@@ -60,18 +60,6 @@ public class ListaProdutosBD extends SQLiteOpenHelper {
         return id != -1;
     }
 
-    public void alterarProduto(Produtos produto) {
-        ContentValues values = new ContentValues();
-
-        values.put("nome", produto.getNome());
-        values.put("marca", produto.getMarca());
-        values.put("preco", produto.getPreco());
-        values.put("localizacao", produto.getLocalizacao());
-
-        String[] args = {produto.getId().toString()};
-        getWritableDatabase().update("listaProdutos", values, "id=?", args);
-    }
-
     public void deletarProduto(Produtos produto) {
         String[] args = {produto.getId().toString()};
         getWritableDatabase().delete("listaProdutos", "id=?", args);

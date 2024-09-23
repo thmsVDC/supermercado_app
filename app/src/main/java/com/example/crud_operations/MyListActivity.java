@@ -69,7 +69,6 @@ public class MyListActivity extends AppCompatActivity {
         listView_produtos = listaBDHelper.getLista();
 
         if (listView_produtos != null) {
-            // Ordenar a lista por localização
             Collections.sort(listView_produtos, new Comparator<Produtos>() {
                 @Override
                 public int compare(Produtos p1, Produtos p2) {
@@ -125,12 +124,10 @@ public class MyListActivity extends AppCompatActivity {
             }
         }
 
-        // Atualiza o TextView com o total
         textViewTotalPrice.setText(String.format("Total: R$ %.2f", totalPreco));
     }
 
     private void showPhoneNumberDialog() {
-        // Verificar se há produtos na lista
         if (listaBDHelper.getLista() == null || listaBDHelper.getLista().isEmpty()) {
             Toast.makeText(this, "A lista de produtos está vazia. Adicione produtos antes de enviar.", Toast.LENGTH_SHORT).show();
             return;
@@ -227,7 +224,7 @@ public class MyListActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enviado");
         builder.setMessage("Sua lista foi enviada com sucesso!")
-                .setIcon(R.drawable.icon_done) // Substitua 'icon_done' pelo drawable apropriado
+                .setIcon(R.drawable.icon_done)
                 .setPositiveButton("OK", (dialog, which) -> {
                     Intent intent = new Intent(MyListActivity.this, MainActivity.class);
                     startActivity(intent);

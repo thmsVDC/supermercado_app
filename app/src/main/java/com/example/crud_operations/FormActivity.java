@@ -66,7 +66,6 @@ public class FormActivity extends AppCompatActivity {
 
         btn_polimorfismo = findViewById(R.id.btn_polimorfismo);
 
-        // Lista de tipos
         final ArrayList<String> tipos = new ArrayList<>(Arrays.asList(
                 "Tipo",
                 "Carne e frutos do mar",

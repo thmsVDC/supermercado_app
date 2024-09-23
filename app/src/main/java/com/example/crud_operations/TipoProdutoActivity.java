@@ -34,7 +34,6 @@ public class TipoProdutoActivity extends AppCompatActivity {
         tipos.add(new TipoProduto("Produtos de limpeza", R.drawable.icon_produtos_limpeza));
         tipos.add(new TipoProduto("Produtos para pets", R.drawable.icon_produtos_pets));
         tipos.add(new TipoProduto("Refrigerantes", R.drawable.icon_refrigerantes));
-        tipos.add(new TipoProduto("Saúde", R.drawable.icon_saude));
         tipos.add(new TipoProduto("Outros", R.drawable.icon_outros));
 
         TipoProdutoAdapter adapter = new TipoProdutoAdapter(this, tipos);

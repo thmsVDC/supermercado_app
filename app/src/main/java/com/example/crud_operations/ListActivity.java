@@ -150,6 +150,8 @@ public class ListActivity extends AppCompatActivity {
         bdHelper.close();
 
         if (listView_produtos != null) {
+            listView_produtos.sort((produto1, produto2) -> produto1.getNome().compareToIgnoreCase(produto2.getNome()));
+
             if (adapter == null) {
                 adapter = new ProdutosAdapter(
                         ListActivity.this,

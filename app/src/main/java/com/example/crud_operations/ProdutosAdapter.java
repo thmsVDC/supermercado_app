@@ -55,27 +55,12 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
         this.isRemoveMode = isRemoveMode;
         this.isAdminAuthenticated = isAdminAuthenticated;
         this.produtosBD = new ProdutosBD(context);
-        this.showQuantity = showQuantity; // Inicializa a flag para mostrar a quantidade
-    }
-
-    public void setRemoveMode(boolean removeMode) {
-        this.isRemoveMode = removeMode;
-        notifyDataSetChanged();
-    }
-
-    public void setAdminAuthenticated(boolean adminAuthenticated) {
-        this.isAdminAuthenticated = adminAuthenticated;
-        notifyDataSetChanged();
+        this.showQuantity = showQuantity;
     }
 
     public void setTipoFiltro(String tipo) {
         this.tipoFiltro = tipo;
         getFilter().filter(null);
-    }
-
-    public void setShowQuantity(boolean showQuantity) {
-        this.showQuantity = showQuantity;
-        notifyDataSetChanged();
     }
 
     @Override
