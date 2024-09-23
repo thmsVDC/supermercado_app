@@ -8,7 +8,6 @@
     android:background="@color/white"
     tools:context=".FormActivity">
 
-    <!-- Botão de Voltar -->
     <ImageView
         android:id="@+id/icon_voltar"
         android:layout_width="wrap_content"
@@ -16,9 +15,9 @@
         android:src="@drawable/icon_voltar"
         android:layout_gravity="left"
         android:paddingLeft="15dp"
-        android:paddingTop="15dp"/>
+        android:paddingTop="15dp"
+        tools:ignore="MissingConstraints" />
 
-    <!-- Campos de Entrada -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -69,19 +68,19 @@
             android:textSize="50sp"
             android:layout_marginBottom="15dp"/>
 
-        <!-- Spinner para Seleção de Tipo -->
         <Spinner
             android:id="@+id/spinner_tipo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:spinnerMode="dropdown"
-            android:layout_marginTop="16dp"
-            android:background="@color/gray"
-            android:textSize="20sp"/>
+            android:background="@drawable/tipo_dropdown_background"
+            android:textSize="50sp"
+            android:layout_marginBottom="15dp"
+            android:dropDownWidth="match_parent"
+            android:popupBackground="@color/white"
+            android:layout_marginTop="16dp" />
     </LinearLayout>
 
-    <!-- Botão no Rodapé -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_polimorfismo"
         android:layout_width="0dp"

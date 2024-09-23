@@ -70,12 +70,12 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
 
     public void setTipoFiltro(String tipo) {
         this.tipoFiltro = tipo;
-        getFilter().filter(null); // Reaplica o filtro com o novo tipo
+        getFilter().filter(null);
     }
 
     public void setShowQuantity(boolean showQuantity) {
         this.showQuantity = showQuantity;
-        notifyDataSetChanged(); // Atualiza a visualização ao alterar a flag
+        notifyDataSetChanged();
     }
 
     @Override
@@ -97,7 +97,6 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
         textViewNome.setText(produto.getNome());
         textViewMarca.setText(produto.getMarca());
 
-        // Formatar o preço para ter duas casas decimais
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
         String precoFormatado = decimalFormat.format(produto.getPreco());
         textViewPreco.setText(precoFormatado);
@@ -106,17 +105,17 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
 
         if (isRemoveMode) {
             buttonAction.setText("ⓧ Remover");
-            buttonAction.setBackgroundResource(R.drawable.remover); // Define o drawable para o estado de remover
+            buttonAction.setBackgroundResource(R.drawable.remover);
             buttonAction.setOnClickListener(v -> {
                 if (onRemoveFromListClickListener != null) {
                     onRemoveFromListClickListener.onRemoveFromListClick(produto);
                 }
             });
             imageViewGearFill.setVisibility(View.GONE);
-            textViewQuantidade.setVisibility(View.GONE); // Oculta a quantidade na ListActivity
+            textViewQuantidade.setVisibility(View.GONE);
         } else {
             buttonAction.setText("＋ Lista");
-            buttonAction.setBackgroundResource(R.drawable.adicionar); // Define o drawable para o estado de adicionar
+            buttonAction.setBackgroundResource(R.drawable.adicionar);
             buttonAction.setOnClickListener(v -> {
                 if (onAddToListClickListener != null) {
                     onAddToListClickListener.onAddToListClick(produto);
@@ -135,7 +134,6 @@ public class ProdutosAdapter extends ArrayAdapter<Produtos> implements Filterabl
                 imageViewGearFill.setVisibility(View.GONE);
             }
 
-            // Exibe a quantidade apenas se a flag showQuantity estiver ativada
             if (showQuantity) {
                 textViewQuantidade.setText("x" + produto.getQuantidade());
                 textViewQuantidade.setVisibility(View.VISIBLE);

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -63,22 +62,16 @@ public class ListActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Adiciona o listener para ocultar o teclado ao tocar em qualquer lugar
         addOnTouchListenerToViews();
-
-        // Inicializa o DrawerLayout e a NavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.navigation_view);
 
-        // Configura o botão "Abrir Sidebar"
         View iconSidebar = findViewById(R.id.icon_sidebar);
         iconSidebar.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
 
-        // Verifica se o admin está autenticado
         SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         isAdminMode = preferences.getBoolean(KEY_IS_AUTHENTICATED, false);
 
-        // Configura o listener do NavigationView
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_settings) {
@@ -95,10 +88,8 @@ public class ListActivity extends AppCompatActivity {
             return false;
         });
 
-        // Ajustar visibilidade do item "Adicionar Produto"
         navigationView.getMenu().findItem(R.id.nav_add_product).setVisible(isAdminMode);
 
-        // Configura os botões da atividade
         Button btnViewMyList = findViewById(R.id.btn_view_my_list);
         btnViewMyList.setOnClickListener(v -> {
             Intent intent = new Intent(ListActivity.this, MyListActivity.class);
@@ -126,7 +117,6 @@ public class ListActivity extends AppCompatActivity {
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Não faz nada antes do texto mudar
             }
 
             @Override
@@ -136,11 +126,9 @@ public class ListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                // Não faz nada depois do texto mudar
             }
         });
 
-        // Carrega a lista de produtos ao iniciar a atividade
         carregarProduto();
     }
 
@@ -225,7 +213,6 @@ public class ListActivity extends AppCompatActivity {
             TipoProduto tipoSelecionado = tipos.get(which);
             Toast.makeText(ListActivity.this, "Selecionado: " + tipoSelecionado.getNome(), Toast.LENGTH_SHORT).show();
 
-            // Atualiza o tipo selecionado e o filtro
             this.tipoSelecionado = "Sem filtro".equals(tipoSelecionado.getNome()) ? null : tipoSelecionado.getNome();
             adapter.setTipoFiltro(this.tipoSelecionado);
 
@@ -236,7 +223,6 @@ public class ListActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    // Método para adicionar o OnTouchListener a todos os IDs
     @SuppressLint("ClickableViewAccessibility")
     private void addOnTouchListenerToViews() {
         int[] viewIds = {
@@ -247,7 +233,6 @@ public class ListActivity extends AppCompatActivity {
                 R.id.icon_tipos,
                 R.id.button_cancel,
                 R.id.btn_view_my_list
-                // Adicione outros IDs conforme necessário
         };
 
         for (int id : viewIds) {

@@ -8,7 +8,6 @@
     android:padding="24dp"
     android:elevation="4dp">
 
-    <!-- Container principal das informações do item -->
     <LinearLayout
         android:id="@+id/container_info"
         android:layout_width="0dp"
@@ -20,7 +19,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- Nome e Quantidade -->
         <LinearLayout
             android:id="@+id/container_nome_quantidade"
             android:layout_width="wrap_content"
@@ -37,7 +35,6 @@
                 android:textStyle="bold"
                 android:text="Nome do Produto"/>
 
-            <!-- Este TextView será configurado via ViewStub se estiver em MyListActivity -->
             <TextView
                 android:id="@+id/textView_quantidade_valor"
                 android:layout_width="wrap_content"
@@ -47,7 +44,6 @@
                 android:textStyle="bold"/>
         </LinearLayout>
 
-        <!-- Marca -->
         <TextView
             android:id="@+id/textView_marca_valor"
             android:layout_width="wrap_content"
@@ -57,7 +53,6 @@
             android:textColor="@android:color/darker_gray"/>
     </LinearLayout>
 
-    <!-- Container de informações adicionais -->
     <LinearLayout
         android:id="@+id/container_extra_info"
         android:layout_width="0dp"
@@ -70,7 +65,6 @@
         app:layout_constraintStart_toEndOf="@id/container_info"
         android:layout_marginStart="16dp">
 
-        <!-- Preço -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -92,7 +86,6 @@
                 android:textSize="40sp"/>
         </LinearLayout>
 
-        <!-- Localização -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -108,7 +101,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Botão de ação ou remoção -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btn_action_or_remove"
         android:layout_width="wrap_content"
@@ -123,7 +115,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:gravity="center"/>
 
-    <!-- Imagem de engrenagem -->
     <ImageView
         android:id="@+id/img_gear_fill"
         android:layout_width="wrap_content"

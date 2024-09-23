@@ -108,7 +108,6 @@ public class ListaProdutosBD extends SQLiteOpenHelper {
         return produtos;
     }
 
-    // Novo método para resetar o banco de dados
     public void resetDatabase() {
         SQLiteDatabase db = null;
         try {

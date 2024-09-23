@@ -83,17 +83,13 @@ public class FormActivity extends AppCompatActivity {
                 "Produtos de limpeza",
                 "Produtos para pets",
                 "Refrigerantes",
-                "Saúde",
                 "Outros"
         ));
-// Substitua pelos tipos reais
 
-        // Configura o adapter do Spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, tipos);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_tipo.setAdapter(adapter);
 
-        // Define o tipo selecionado no Spinner
         spinner_tipo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -108,13 +104,11 @@ public class FormActivity extends AppCompatActivity {
 
         if (editarProduto != null) {
             btn_polimorfismo.setText("Modificar");
-            // Preenche os campos com os dados do produto a ser editado
             editText_nome.setText(editarProduto.getNome());
             editText_marca.setText(editarProduto.getMarca());
             editText_preco.setText(String.valueOf(editarProduto.getPreco()));
             editText_localizacao.setText(editarProduto.getLocalizacao());
 
-            // Seleciona o tipo no Spinner
             int spinnerPosition = adapter.getPosition(editarProduto.getTipo());
             spinner_tipo.setSelection(spinnerPosition);
         } else {
@@ -133,7 +127,7 @@ public class FormActivity extends AppCompatActivity {
             }
             produto.setPreco(preco);
             produto.setLocalizacao(editText_localizacao.getText().toString());
-            produto.setTipo(tipoSelecionado); // Define o tipo selecionado
+            produto.setTipo(tipoSelecionado);
 
             if (btn_polimorfismo.getText().toString().equals("Cadastrar")) {
                 boolean success = bdHelper.salvarProduto(produto);
@@ -160,7 +154,7 @@ public class FormActivity extends AppCompatActivity {
         editText_marca.setText("");
         editText_preco.setText("");
         editText_localizacao.setText("");
-        spinner_tipo.setSelection(0); // Reseta o Spinner para o primeiro item
+        spinner_tipo.setSelection(0);
     }
 
     @Override

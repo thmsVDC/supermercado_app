@@ -24,18 +24,16 @@ public class Produtos implements Parcelable {
     }
 
     public int getQuantidade() {
-        return quantidade; // Getter para quantidade
+        return quantidade;
     }
 
     public void setQuantidade(int quantidade) {
-        this.quantidade = quantidade; // Setter para quantidade
+        this.quantidade = quantidade;
     }
 
-    // Construtor padrão
     public Produtos() {
     }
 
-    // Construtor para criar a partir de um Parcel
     protected Produtos(Parcel in) {
         id = in.readLong();
         nome = in.readString();
@@ -65,8 +63,8 @@ public class Produtos implements Parcelable {
         dest.writeString(marca);
         dest.writeDouble(preco);
         dest.writeString(localizacao);
-        dest.writeString(tipo); // Escrever tipo no Parcel
-        dest.writeInt(quantidade); // Escrever quantidade no Parcel
+        dest.writeString(tipo);
+        dest.writeInt(quantidade);
     }
 
     @Override

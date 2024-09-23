@@ -1,40 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp">
 
-    <!-- Fundo do dialog com bordas arredondadas e sombra -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_background"
-        android:padding="16dp">
+        android:padding="16dp"
+        tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            tools:ignore="UselessParent">
 
-            <!-- Prefixo do número de telefone -->
             <TextView
                 android:id="@+id/textView_prefix"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+55"
+                android:text="@string/_55"
                 android:textSize="16sp"
                 android:padding="10dp"/>
 
-            <!-- EditText para entrada do número de telefone -->
             <EditText
                 android:id="@+id/editText_phone_number"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Digite o número de telefone"
+                android:autofillHints=""
+                android:hint="@string/digite_o_n_mero_de_telefone"
                 android:inputType="phone"
                 android:padding="10dp"/>
         </LinearLayout>

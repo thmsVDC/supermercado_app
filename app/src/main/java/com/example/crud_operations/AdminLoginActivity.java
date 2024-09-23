@@ -26,17 +26,14 @@ public class AdminLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_login);
 
-        // Configuração do UI
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
-        // Inicialização dos componentes
         editTextUsername = findViewById(R.id.editText_username);
         editTextPassword = findViewById(R.id.editText_password);
         buttonAuthenticate = findViewById(R.id.button_authenticate);
         buttonBack = findViewById(R.id.icon_voltar);
 
-        // Configuração dos eventos de clique
         buttonAuthenticate.setOnClickListener(v -> authenticate());
         buttonBack.setOnClickListener(v -> {
             Intent intent = new Intent(AdminLoginActivity.this, ListActivity.class);
@@ -50,7 +47,6 @@ public class AdminLoginActivity extends AppCompatActivity {
         String password = editTextPassword.getText().toString().trim();
 
         if ("ADMIN".equals(username) && "1234".equals(password)) {
-            // Autenticação bem-sucedida
             SharedPreferences preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean(KEY_IS_AUTHENTICATED, true);
@@ -59,10 +55,9 @@ public class AdminLoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Administrador conectado", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(AdminLoginActivity.this, ListActivity.class);
             startActivity(intent);
-            finish(); // Fecha AdminLoginActivity para evitar voltar à tela de login
+            finish();
         } else {
-            // Falha na autenticação
-            Toast.makeText(this, "Nome de usuário ou senha incorretos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Credenciais incorretas", Toast.LENGTH_SHORT).show();
         }
     }
 }
